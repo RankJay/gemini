@@ -27,7 +27,6 @@ export default function Settings({ asDrawer }: SettingsProps) {
 
   const { emailMode } = useEmail();
 
-  console.log(emailMode);
   if (asDrawer) {
     return (
       <div className="relative flex-col items-start gap-8 pt-4 px-3">
