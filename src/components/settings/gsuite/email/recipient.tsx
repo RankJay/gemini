@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { InputProps } from '@/components/ui/input';
+import { Input } from "@/components/ui/input"
 
 function EmailInput() {
     const [recEmail, setEmail] = useState('');
@@ -17,7 +17,7 @@ function EmailInput() {
     };
 
     return (
-        <InputProps
+        <Input
             type="email"
             value={recEmail}
             onChange={handleInputChange}
