@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     client_id: process.env.GMAIL_CLIENT_ID!,
     redirect_uri: process.env.GMAIL_CLIENT_REDIRECT_URI!,
     response_type: "code",
-    scope: "https://www.googleapis.com/auth/userinfo.profile",
+    scope: "https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/userinfo.profile",
     access_type: "offline",
     prompt: "consent",
   };

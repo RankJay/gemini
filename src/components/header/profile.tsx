@@ -34,7 +34,7 @@ export default function Profile() {
           setProfileImage(data.picture);
         })
         .catch((error) => {
-          deleteCookie("auth");
+          // deleteCookie("auth");
         });
     }
   }, []);
