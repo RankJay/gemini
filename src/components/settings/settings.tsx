@@ -2,17 +2,18 @@ import { useEmail } from "@/hooks/use-email-mode";
 import ModelSettings from "./model/settings";
 import EmailMode from "./mode/mode";
 import GSuiteSettings from "./gsuite/settings";
-import EmailInput from "./gsuite/email/recipient";
-
+import EmailInput from "./email/recipient";
 
 export type SettingsProps = {
   asDrawer?: boolean;
 };
 
 const SettingsForm = () => {
+  const { emailMode } = useEmail();
+
   return (
     <form className="grid w-full items-start gap-6">
-      <EmailInput />
+      {emailMode === 'DRAFT' && <EmailInput/>}
       <EmailMode />
       <fieldset className="grid gap-6 rounded-lg border p-4">
         <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
