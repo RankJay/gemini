@@ -1,49 +1,88 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { NextApiRequest } from 'next';
 
-const MAX_RESULTS = process.env.MAX_RESULTS || 10;
+interface TrainingData {
+  text_input: string;  // Original email snippet
+  output: string;      // Summarized text from OpenAI
+}
 
-export async function GET(request: Request) {
-  try {
-    const store = cookies();
-    const code = store.get("auth");
+export async function GET(request: NextApiRequest) {
+  const store = cookies();
+  const code = store.get("auth");
 
-    if (!code) {
-      return new Response("Unauthorized", { status: 401 });
+  if (!code) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
+  const MAX_RESULTS = process.env.MAX_RESULTS || '10';
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+  const OPENAI_CHAT_API_URL = "https://api.openai.com/v1/chat/completions";
+
+  // Fetch snippets
+  const gmailResponse = await fetch(
+    `https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=${MAX_RESULTS}&labelIds=SENT`,
+    {
+      headers: {
+        Authorization: `Bearer ${code.value}`,
+      },
     }
+  );
 
-    const response = await fetch(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=${MAX_RESULTS}&labelIds=SENT`,
+  if (!gmailResponse.ok) {
+    return new NextResponse(`Failed to fetch messages: ${gmailResponse.statusText}`, { status: 500 });
+  }
+
+  const messagesList = await gmailResponse.json();
+  if (!messagesList.messages) {
+    return new NextResponse("No messages found", { status: 404 });
+  }
+
+  const trainingData: TrainingData[] = [];
+  for (const message of messagesList.messages) {
+    const detailResponse = await fetch(
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${message.id}`,
       {
         headers: {
           Authorization: `Bearer ${code.value}`,
         },
       }
     );
+    const messageDetails = await detailResponse.json();
+    const snippet = messageDetails.snippet;
 
-    const messagesList = await response.json();
-
-    const messages = await Promise.all(
-      messagesList.messages.map(async (message: any) => {
-        const response = await fetch(
-          `https://gmail.googleapis.com/gmail/v1/users/me/messages/${message.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${code.value}`,
-            },
-          }
-        );
-
-        return response.json();
+    // Send the snippet to OpenAI for summarization
+    const openaiResponse = await fetch(OPENAI_CHAT_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "user", content: snippet}],
+        max_tokens: 150,
       })
-    );
+    });
 
-    return NextResponse.json(messages);
-  } catch (error: any) {
-    console.log(error.response.data);
-    return new Response(error as any, { status: 500 });
+    const summaryResult = await openaiResponse.json();
+    if (summaryResult.choices && summaryResult.choices.length > 0) {
+      const summary = summaryResult.choices[0].message?.content;
+      trainingData.push({
+        text_input: snippet,  // Original email snippet
+        output: summary       // Summarized text
+      });
+    }
   }
+
+  return new NextResponse(JSON.stringify(trainingData), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
+
+
+
+
+
+
 
 export async function POST(request: Request) {
   try {
