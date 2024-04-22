@@ -81,9 +81,6 @@ export async function GET(request: NextApiRequest) {
 
 
 
-
-
-
 export async function POST(request: Request) {
   try {
     const store = cookies();

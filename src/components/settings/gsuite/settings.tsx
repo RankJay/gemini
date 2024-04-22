@@ -8,6 +8,8 @@ import { useEmail } from "@/hooks/use-email-mode";
 import { Button } from "@/components/ui/button";
 
 function DraftEmailGSuiteSettings() {
+
+  
   return (
     <>
       <Input placeholder="Subject: You are using a great product!" />
@@ -19,6 +21,7 @@ function DraftEmailGSuiteSettings() {
     </>
   );
 }
+
 
 function SearchEmailGSuiteSettings() {
   return (
@@ -62,3 +65,56 @@ export default function GSuiteSettings() {
     </>
   );
 }
+
+
+/*  import React, { useState } from 'react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { POST } from 'path/to/your/POST'; // Import your POST function
+
+function DraftEmailGSuiteSettings() {
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSendEmail = async () => {
+    // Validate recipientEmail, subject, and message here if needed
+
+    try {
+      await POST({
+        to: recipientEmail,
+        subject,
+        message
+      });
+      console.log("Email sent successfully!");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
+
+  return (
+    <>
+      <Input 
+        type="email"
+        value={recipientEmail} 
+        onChange={(e) => setRecipientEmail(e.target.value)} 
+        placeholder="Recipient Email" 
+      />
+      <Input 
+        placeholder="Subject: You are using a great product!" 
+        value={subject} 
+        onChange={(e) => setSubject(e.target.value)} 
+      />
+      <Input 
+        placeholder="Message" 
+        value={message} 
+        onChange={(e) => setMessage(e.target.value)} 
+      />
+      <Button onClick={handleSendEmail}>Send email</Button>
+    </>
+  );
+}
+
+export default DraftEmailGSuiteSettings;
+
+*/
