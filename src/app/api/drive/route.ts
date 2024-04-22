@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 
 export async function GET(request: Request) {
@@ -21,6 +21,8 @@ export async function GET(request: Request) {
 
   const driveList = await response.json();
 
+  // Extract just the names from the files array
+  const fileNames = driveList.files.map((file: { name: string }) => file.name);
 
-  return NextResponse.json(driveList);
+  return NextResponse.json(fileNames);
 }
