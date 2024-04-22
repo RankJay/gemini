@@ -7,17 +7,21 @@ import { Input } from "@/components/ui/input";
 import { useEmail } from "@/hooks/use-email-mode";
 import { Button } from "@/components/ui/button";
 import { FormEvent } from "react";
+import { useState } from "react";
 
 function DraftEmailGSuiteSettings() {
   "use client";
+
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [subject, setSubject] = useState('');
 
   const onSubmit = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const resp = await fetch("/api/email", {
       method: "POST",
       body: JSON.stringify({
-        subject: "Subject: You are using a great product!",
-        to: "ravinajay8@gmail.com",
+        subject: subject,
+        to: recipientEmail,
         message: "Hello, I am using your product and it is great!",
       }),
     });
@@ -31,10 +35,15 @@ function DraftEmailGSuiteSettings() {
 
   return (
     <>
-      <Input placeholder="Subject: You are using a great product!" />
-      <Input
-        placeholder="To: sundar.p@google.com"
-        pattern="^([a-zA-Z0-9. _%+-]+@[a-zA-Z0-9. -]+\\\\. [a-zA-Z]{2,}$/"
+      <Input 
+        placeholder="Recipient Email" 
+        value={recipientEmail} 
+        onChange={(e) => setRecipientEmail(e.target.value)} 
+      />
+      <Input 
+        placeholder="Subject: You are using a great product!" 
+        value={subject} 
+        onChange={(e) => setSubject(e.target.value)} 
       />
       <Button onClick={onSubmit}>Send email</Button>
     </>
