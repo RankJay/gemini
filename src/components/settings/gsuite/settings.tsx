@@ -59,36 +59,42 @@ function SearchEmailGSuiteSettings() {
   );
 }
 
-export default function GSuiteSettings() {
+function GSuiteSettings() {
   const { setGSuiteService } = useGSuiteService();
   const { emailMode } = useEmail();
 
   return (
     <>
-      {emailMode === EmailMode.DRAFT && <DraftEmailGSuiteSettings />}
+      {emailMode === EmailMode.DRAFT && (
+        <>
+          <DraftEmailGSuiteSettings />
+          <Tabs defaultValue={GSuiteService.DRIVE} className="w-[200px]">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger
+                value={GSuiteService.DRIVE}
+                onClick={() => setGSuiteService(GSuiteService.DRIVE)}
+              >
+                Drive
+              </TabsTrigger>
+              <TabsTrigger
+                value={GSuiteService.MEET}
+                onClick={() => setGSuiteService(GSuiteService.MEET)}
+              >
+                Meet
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value={GSuiteService.DRIVE}>
+              <GSuiteDriveSettings />
+            </TabsContent>
+            <TabsContent value={GSuiteService.MEET}>
+              <GSuiteMeetSettings />
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
       {emailMode === EmailMode.SEARCH && <SearchEmailGSuiteSettings />}
-      <Tabs defaultValue={GSuiteService.DRIVE} className="w-[200px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger
-            value={GSuiteService.DRIVE}
-            onClick={() => setGSuiteService(GSuiteService.DRIVE)}
-          >
-            Drive
-          </TabsTrigger>
-          <TabsTrigger
-            value={GSuiteService.MEET}
-            onClick={() => setGSuiteService(GSuiteService.MEET)}
-          >
-            Meet
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value={GSuiteService.DRIVE}>
-          <GSuiteDriveSettings />
-        </TabsContent>
-        <TabsContent value={GSuiteService.MEET}>
-          <GSuiteMeetSettings />
-        </TabsContent>
-      </Tabs>
     </>
   );
 }
+
+export default GSuiteSettings;
