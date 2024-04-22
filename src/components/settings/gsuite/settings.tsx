@@ -6,8 +6,29 @@ import GSuiteMeetSettings from "./meet/meet";
 import { Input } from "@/components/ui/input";
 import { useEmail } from "@/hooks/use-email-mode";
 import { Button } from "@/components/ui/button";
+import { FormEvent } from "react";
 
 function DraftEmailGSuiteSettings() {
+  "use client";
+
+  const onSubmit = async (event: FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const resp = await fetch("/api/email", {
+      method: "POST",
+      body: JSON.stringify({
+        subject: "Subject: You are using a great product!",
+        to: "ravinajay8@gmail.com",
+        message: "Hello, I am using your product and it is great!",
+      }),
+    });
+
+    if (resp.ok) {
+      alert("Email sent successfully!");
+    } else {
+      alert("Failed to send email!");
+    }
+  };
+
   return (
     <>
       <Input placeholder="Subject: You are using a great product!" />
@@ -15,7 +36,7 @@ function DraftEmailGSuiteSettings() {
         placeholder="To: sundar.p@google.com"
         pattern="^([a-zA-Z0-9. _%+-]+@[a-zA-Z0-9. -]+\\\\. [a-zA-Z]{2,}$/"
       />
-      <Button>Send email</Button>
+      <Button onClick={onSubmit}>Send email</Button>
     </>
   );
 }
