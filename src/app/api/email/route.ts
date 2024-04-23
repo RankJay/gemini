@@ -67,7 +67,7 @@ export async function GET(request: NextApiRequest) {
           {
             role: "system",
             content:
-              "You are a great EMAIL Summarizer. I am going to give you a email body content. I want you to iterate over this, and read, and carefully draft a new question which upon prompting to an AI, will closely write the same email body content in crisp manner as to what does it produce.",
+              "You are a great EMAIL Summarizer. I am going to give you a email body content. I want you to iterate over this, and read, and carefully draft a summary of the email. Output only the summery no need to do any formatting",
           },
           { role: "user", content: snippet },
         ],
