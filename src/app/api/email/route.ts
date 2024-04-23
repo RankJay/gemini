@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { NextApiRequest } from 'next';
+import { NextApiRequest } from "next";
 
 interface TrainingData {
-  text_input: string;  // Original email snippet
-  output: string;      // Summarized text from OpenAI
+  input: string; // Original email snippet
+  output: string; // Summarized text from OpenAI
 }
 
 export async function GET(request: NextApiRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextApiRequest) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const MAX_RESULTS = process.env.MAX_RESULTS || '10';
+  const MAX_RESULTS = process.env.MAX_RESULTS || "10";
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   const OPENAI_CHAT_API_URL = "https://api.openai.com/v1/chat/completions";
 
@@ -30,7 +30,10 @@ export async function GET(request: NextApiRequest) {
   );
 
   if (!gmailResponse.ok) {
-    return new NextResponse(`Failed to fetch messages: ${gmailResponse.statusText}`, { status: 500 });
+    return new NextResponse(
+      `Failed to fetch messages: ${gmailResponse.statusText}`,
+      { status: 500 }
+    );
   }
 
   const messagesList = await gmailResponse.json();
@@ -56,33 +59,37 @@ export async function GET(request: NextApiRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: snippet}],
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a great EMAIL Summarizer. I am going to give you a email body content. I want you to iterate over this, and read, and carefully draft a new question which upon prompting to an AI, will closely write the same email body content in crisp manner as to what does it produce.",
+          },
+          { role: "user", content: snippet },
+        ],
         max_tokens: 150,
-      })
+      }),
     });
 
     const summaryResult = await openaiResponse.json();
     if (summaryResult.choices && summaryResult.choices.length > 0) {
       const summary = summaryResult.choices[0].message?.content;
       trainingData.push({
-        text_input: snippet,  // Original email snippet
-        output: summary       // Summarized text
+        input: summary, // Original email snippet
+        output: snippet, // Summarized text
       });
     }
   }
 
-  return new NextResponse(JSON.stringify(trainingData), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  return new NextResponse(JSON.stringify(trainingData), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
-
-
-
-
-
-
 
 export async function POST(request: Request) {
   try {
