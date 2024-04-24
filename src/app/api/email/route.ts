@@ -52,7 +52,7 @@ export async function GET(request: NextApiRequest) {
       }
     );
     const messageDetails = await detailResponse.json();
-    const snippet = messageDetails.snippet;
+    const snippet = atob(messageDetails.payload.body.data);
 
     // Send the snippet to OpenAI for summarization
     const openaiResponse = await fetch(OPENAI_CHAT_API_URL, {
