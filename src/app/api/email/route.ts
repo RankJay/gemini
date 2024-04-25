@@ -52,10 +52,15 @@ export async function GET(request: NextApiRequest) {
       }
     );
     const messageDetails = await detailResponse.json();
-    const snippet =
-      Number(messageDetails.payload.body.size ?? 0) > 0
-        ? atob(messageDetails.payload.body.data)
-        : messageDetails.snippet;
+    let snippet = "";
+
+    for (const part of messageDetails.payload.parts) {
+      if (part.mimeType === "text/plain") {
+        snippet = Buffer.from(part.body.data, "base64").toString("utf-8");
+        console.log("Snippet: ", snippet);
+        break;
+      }
+    }
 
     // Send the snippet to OpenAI for summarization
     const openaiResponse = await fetch(OPENAI_CHAT_API_URL, {
