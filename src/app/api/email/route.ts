@@ -54,12 +54,17 @@ export async function GET(request: NextApiRequest) {
     const messageDetails = await detailResponse.json();
     let snippet = "";
 
-    for (const part of messageDetails.payload.parts) {
-      if (part.mimeType === "text/plain") {
-        snippet = Buffer.from(part.body.data, "base64").toString("utf-8");
-        console.log("Snippet: ", snippet);
-        break;
+    console.log(JSON.stringify(messageDetails))
+    if (messageDetails.payload.parts) {
+      for (const part of messageDetails.payload.parts) {
+        if (part.mimeType === "text/plain") {
+          snippet = Buffer.from(part.body.data, "base64").toString("utf-8");
+          console.log("Snippet: ", snippet);
+          break;
+        }
       }
+    } else {
+      snippet = messageDetails.snippet;
     }
 
     // Send the snippet to OpenAI for summarization
