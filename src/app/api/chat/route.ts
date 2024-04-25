@@ -1,3 +1,4 @@
+import { systemPrompt } from '@/lib/utils';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
 import { Message } from 'ai/react';
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
   // Extract the `prompt` from the body of the request
   const payload: { "messages": Message[]} = await req.json();
 
-  const prompt = payload.messages[payload.messages.length - 1].content;
+  const prompt = systemPrompt + " " + payload.messages[payload.messages.length - 1].content;
  
   // Ask Google Generative AI for a streaming completion given the prompt
   const response = await genAI
