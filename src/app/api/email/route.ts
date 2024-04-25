@@ -15,7 +15,7 @@ export async function GET(request: NextApiRequest) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const MAX_RESULTS = process.env.MAX_RESULTS || "10";
+  const MAX_RESULTS = process.env.MAX_RESULTS || "50";
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   const OPENAI_CHAT_API_URL = "https://api.openai.com/v1/chat/completions";
 
