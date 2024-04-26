@@ -9,6 +9,7 @@ import Settings from "../../settings/settings";
 import { Drawer, DrawerContent, DrawerTrigger } from "../../ui/drawer";
 import { ChangeEvent, FormEvent } from "react";
 import { ChatRequestOptions } from "ai";
+import { Message } from "ai/react";
 
 export type ChatInputProps = {
   input: string;
@@ -20,9 +21,10 @@ export type ChatInputProps = {
     chatRequestOptions?: ChatRequestOptions | undefined
   ) => void;
   isLoading: boolean;
+  setMessages: (messages: Message[]) => void;
 };
 
-export default function ChatInput({ input, handleInputChange, handleSubmit, isLoading }: ChatInputProps) {
+export default function ChatInput({ input, handleInputChange, handleSubmit, isLoading, setMessages }: ChatInputProps) {
   return (
     <form
       className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
@@ -60,7 +62,7 @@ export default function ChatInput({ input, handleInputChange, handleSubmit, isLo
           </DrawerContent>
         </Drawer>
 
-        <Button type="submit" size="sm" className="ml-auto gap-1.5" disabled={isLoading} >
+        <Button type="submit" size="sm" className="ml-auto gap-1.5" onClick={() => setMessages([])} disabled={isLoading} >
           Send Message
           <CornerDownLeft className="size-3.5" />
         </Button>

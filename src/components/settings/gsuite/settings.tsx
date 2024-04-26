@@ -68,7 +68,7 @@ function GSuiteSettings() {
       {emailMode === EmailMode.DRAFT && (
         <>
           <DraftEmailGSuiteSettings />
-          <Tabs defaultValue={GSuiteService.DRIVE} className="w-[200px]">
+          <Tabs defaultValue={GSuiteService.DRIVE}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger
                 value={GSuiteService.DRIVE}

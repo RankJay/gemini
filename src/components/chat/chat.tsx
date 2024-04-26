@@ -7,7 +7,7 @@ import ChatOutput from "./output/output";
 import { useChat } from "ai/react";
 
 export default function Chat() {
-  const { input, messages, isLoading, handleInputChange, handleSubmit } =
+  const { input, messages, setMessages, isLoading, handleInputChange, handleSubmit } =
     useChat();
   return (
     <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
@@ -26,6 +26,7 @@ export default function Chat() {
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         isLoading={isLoading}
+        setMessages={setMessages}
       />
     </div>
   );
