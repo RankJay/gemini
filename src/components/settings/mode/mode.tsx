@@ -7,20 +7,20 @@ import { EmailMode as mode } from "@/lib/types";
 export default function EmailMode() {
   const { setEmailMode } = useEmail();
   return (
-    <Tabs defaultValue={mode.DRAFT} className="w-[200px]">
-      <TabsList className="grid w-full grid-cols-2">
+    <Tabs defaultValue={mode.DRAFT} className="w-full">
+      <TabsList className="grid w-full grid-cols-1">
         <TabsTrigger
           value={mode.DRAFT}
           onClick={() => setEmailMode(mode.DRAFT)}
         >
           Draft
         </TabsTrigger>
-        <TabsTrigger
+        {/* <TabsTrigger
           value={mode.SEARCH}
           onClick={() => setEmailMode(mode.SEARCH)}
         >
           Search
-        </TabsTrigger>
+        </TabsTrigger> */}
       </TabsList>
     </Tabs>
   );
