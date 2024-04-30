@@ -1,13 +1,12 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
 
 // interface TrainingData {
 //   input: string; // Original email snippet
 //   output: string; // Summarized text from OpenAI
 // }
 
-export async function GET(request: NextApiRequest) {
+export async function GET(request: Request) {
   const store = cookies();
   const code = store.get("auth");
 

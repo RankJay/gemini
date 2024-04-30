@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { GET as getEmails } from "@/app/api/email/route";
-import { NextApiRequest } from "next";
 import { cookies } from "next/headers";
 
 export const maxDuration = 10
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: Request) {
   const store = cookies();
   const emailData = await getEmails(req);
   if (!emailData.ok) {
