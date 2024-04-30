@@ -6,6 +6,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Rabbit } from "lucide-react";
+import TrainingSettings from "../train/train";
 
 export default function ModelSettings() {
   return (
@@ -37,6 +38,7 @@ export default function ModelSettings() {
           </SelectItem>
         </SelectContent>
       </Select>
+      <TrainingSettings />
     </>
   );
 }

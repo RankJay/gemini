@@ -6,46 +6,31 @@ import GSuiteMeetSettings from "./meet/meet";
 import { Input } from "@/components/ui/input";
 import { useEmail } from "@/hooks/use-email-mode";
 import { Button } from "@/components/ui/button";
-import { FormEvent } from "react";
 import { useState } from "react";
+import SendEmailWithDialog from "./send";
 
 function DraftEmailGSuiteSettings() {
   "use client";
 
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [subject, setSubject] = useState('');
-
-  const onSubmit = async (event: FormEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const resp = await fetch("/api/email", {
-      method: "POST",
-      body: JSON.stringify({
-        subject: subject,
-        to: recipientEmail,
-        message: "Hello, I am using your product and it is great!",
-      }),
-    });
-
-    if (resp.ok) {
-      alert("Email sent successfully!");
-    } else {
-      alert("Failed to send email!");
-    }
-  };
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [subject, setSubject] = useState("");
 
   return (
     <>
-      <Input 
-        placeholder="Recipient Email" 
-        value={recipientEmail} 
-        onChange={(e) => setRecipientEmail(e.target.value)} 
+      <Input
+        placeholder="Recipient Email"
+        value={recipientEmail}
+        onChange={(e) => setRecipientEmail(e.target.value)}
       />
-      <Input 
-        placeholder="Subject: You are using a great product!" 
-        value={subject} 
-        onChange={(e) => setSubject(e.target.value)} 
+      <Input
+        placeholder="Subject: You are using a great product!"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
       />
-      <Button onClick={onSubmit}>Send email</Button>
+      <SendEmailWithDialog
+        subject={subject}
+        recipientEmail={recipientEmail}
+      />
     </>
   );
 }

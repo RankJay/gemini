@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 export const maxDuration = 10
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const store = cookies();
   const emailData = await getEmails(req);
   if (!emailData.ok) {
