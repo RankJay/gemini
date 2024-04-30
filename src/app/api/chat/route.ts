@@ -2,6 +2,7 @@ import { systemPrompt } from '@/lib/utils';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
 import { Message } from 'ai/react';
+import { cookies } from 'next/headers';
  
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
  
@@ -9,10 +10,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 export const runtime = 'edge';
  
 export async function POST(req: Request) {
+  const store = cookies();
   // Extract the `prompt` from the body of the request
   const payload: { "messages": Message[]} = await req.json();
+  const emailsDataString = store.get("emaildata")?.value || '';
 
-  const prompt = systemPrompt + " " + payload.messages[payload.messages.length - 1].content;
+  const prompt = systemPrompt + " " + emailsDataString + "\n\n Following is the user prompt:\n" + payload.messages[payload.messages.length - 1].content;
  
   // Ask Google Generative AI for a streaming completion given the prompt
   const response = await genAI
