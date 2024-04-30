@@ -39,6 +39,14 @@ export default function Profile() {
     }
   }, []);
 
+  const onClick = async () => {
+    const response = await fetch('/api/auth', {
+      method: 'POST',
+    });
+    const { url } = await response.json();
+    router.replace(url);
+  }
+
   if (isExistingUser || profileImage.length > 0) {
     return (
       <div>
@@ -53,7 +61,7 @@ export default function Profile() {
   }
 
   return (
-    <Button variant="outline" size="sm" className="ml-auto gap-1.5 text-sm" onClick={() => router.push('/api/auth')}>
+    <Button variant="outline" size="sm" className="ml-auto gap-1.5 text-sm" onClick={onClick}>
       Sign in
     </Button>
   );
