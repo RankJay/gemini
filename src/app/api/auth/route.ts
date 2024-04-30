@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const auth_url = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -14,5 +14,5 @@ export async function GET(request: Request) {
 
   const url = new URL(auth_url + "?" + new URLSearchParams(params));
 
-  redirect(url.toString());
+  permanentRedirect(url.toString());
 }
