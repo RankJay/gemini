@@ -8,7 +8,7 @@ import { getCookie } from "cookies-next";
 export default function GSuiteMeetingSettings() {
   const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState<string>(
-    "Please sign in to view documents."
+    "Please sign in to view free slots."
   );
 
   React.useEffect(() => {
@@ -32,7 +32,7 @@ export default function GSuiteMeetingSettings() {
   }, []);
 
   return (
-    <ScrollArea className="h-72 rounded-md border">
+    <ScrollArea className="h-44 rounded-md border">
       <div className="p-4">
         <h4 className="mb-4 text-sm font-medium leading-none">
           Free Times (local timezone)

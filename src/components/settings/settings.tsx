@@ -2,6 +2,7 @@ import { useEmail } from "@/hooks/use-email-mode";
 import ModelSettings from "./model/settings";
 import EmailMode from "./mode/mode";
 import GSuiteSettings from "./gsuite/settings";
+import { Toaster } from "../ui/toaster";
 
 export type SettingsProps = {
   asDrawer?: boolean;
@@ -19,6 +20,7 @@ const SettingsForm = () => {
         <legend className="-ml-1 px-1 text-sm font-medium">G Suite</legend>
         <GSuiteSettings />
       </fieldset>
+      <Toaster />
     </form>
   );
 };
