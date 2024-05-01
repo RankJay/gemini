@@ -61,22 +61,21 @@ export async function GET(request: Request) {
   const busyTimes = Object.values(freeBusyData.calendars)
     .flatMap((calendar: any) => calendar.busy);
 
-  console.log(busyTimes);
+
 
   // Find free times using the findFreeTimes function
   const freeTimes = findFreeTimes(busyTimes, currentDate, endDate);
   
   // Log free times
-  console.log(freeTimes);
+
 
   // Filter and generate slots
-  const nextSlots = filterAndGenerateSlots(freeTimes, userTimeZone);
+  const slots = filterAndGenerateSlots(freeTimes, userTimeZone);
 
-  // Log next slots
-  console.log(nextSlots);
+
 
   // Return the next slots as a response
-  return new Response(JSON.stringify(nextSlots), {
+  return new Response(JSON.stringify(slots), {
     headers: {
       "Content-Type": "application/json"
     }
@@ -115,44 +114,40 @@ function findFreeTimes(busyTimes: { start: string, end: string }[], currentDate:
 }
 
 
-function filterAndGenerateSlots(freeTimes: { start: Date, end: Date }[], userTimeZone: string): { start: Date, end: Date }[] {
-  const filteredSlots = [];
+
+function filterAndGenerateSlots(freeTimes: { start: Date, end: Date }[], userTimeZone: string): string[] {
+  const filteredSlots: string[] = [];
 
   for (const freeTime of freeTimes) {
-      // Check if the free time falls on a weekend
-      if (freeTime.start.getDay() !== 0 && freeTime.start.getDay() !== 6) {
-          // Convert start and end times to user's timezone
-          const startTime = new Date(freeTime.start.toLocaleString("en-US", { timeZone: userTimeZone }));
-          const endTime = new Date(freeTime.end.toLocaleString("en-US", { timeZone: userTimeZone }));
+    // Check if the free time falls on a weekend
+    if (freeTime.start.getDay() !== 0 && freeTime.start.getDay() !== 6) {
+      // Convert start and end times to user's timezone
+      const startTime = new Date(freeTime.start.toLocaleString("en-US", { timeZone: userTimeZone }));
+      const endTime = new Date(freeTime.end.toLocaleString("en-US", { timeZone: userTimeZone }));
 
-          // Check if the free time is within 9-5
-          if (startTime.getHours() >= 9 && endTime.getHours() <= 17) {
-              filteredSlots.push({ start: startTime, end: endTime });
-          }
+      // Check if the free time is within 9-5
+      if (startTime.getHours() >= 9 && endTime.getHours() <= 17) {
+        // Format start time
+        const startMonth = startTime.getMonth() + 1;
+        const startDay = startTime.getDate();
+        const startHour = startTime.getHours() % 12 || 12; // Convert 0 to 12
+        const startMinute = startTime.getMinutes();
+        const startAmPm = startTime.getHours() < 12 ? 'AM' : 'PM';
+
+        // Format end time
+        const endMonth = endTime.getMonth() + 1;
+        const endDay = endTime.getDate();
+        const endHour = endTime.getHours() % 12 || 12; // Convert 0 to 12
+        const endMinute = endTime.getMinutes();
+        const endAmPm = endTime.getHours() < 12 ? 'AM' : 'PM';
+
+        // Construct the formatted string
+        const formattedSlot = `${startMonth}/${startDay} ${startHour}:${(startMinute < 10 ? '0' : '') + startMinute} ${startAmPm} - ${endMonth}/${endDay} ${endHour}:${(endMinute < 10 ? '0' : '') + endMinute} ${endAmPm}`;
+        
+        filteredSlots.push(formattedSlot);
       }
+    }
   }
 
-  // Sort filtered slots by start time
-  const sortedFilteredSlots = filteredSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-
-  // Generate next MAX_TIMES, 30-minute intervals
-  const nextSlots = [];
-  let slotCount = 0;
-  let currentSlotTime = sortedFilteredSlots[0].start;
-
-  while (slotCount < MAX_TIMES) {
-      // Increment current slot time by 30 minutes
-      currentSlotTime = new Date(currentSlotTime.getTime() + 30 * 60 * 1000);
-
-      // Check if the slot falls within working hours
-      if (currentSlotTime.getHours() >= 9 && currentSlotTime.getHours() < 17) {
-          nextSlots.push({
-              start: new Date(currentSlotTime.getTime()),
-              end: new Date(currentSlotTime.getTime() + 30 * 60 * 1000)
-          });
-          slotCount++;
-      }
-  }
-
-  return nextSlots;
+  return filteredSlots;
 }
