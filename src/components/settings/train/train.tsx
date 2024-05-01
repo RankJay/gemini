@@ -11,17 +11,10 @@ export default function TrainingSettings() {
   const [status, setStatus] = useState<string>("Train Gemini");
 
   useEffect(() => {
-    const emailData = getCookie("emaildata");
     const auth = getCookie("auth");
 
     if (!auth) {
       setDisabled(true);
-    }
-
-    if (emailData) {
-      setEmailData(emailData as string);
-      setDisabled(true);
-      setStatus("Model Trained");
     }
   }, [emailData]);
 
@@ -45,17 +38,6 @@ export default function TrainingSettings() {
         description: "Failed to train model.",
       });
 
-      setStatus("Train Gemini");
-      setDisabled(false);
-      return;
-    }
-
-    const emailData = getCookie("emaildata");
-    if (!emailData) {
-      toast({
-        title: "Email AI",
-        description: "Failed to load email data.",
-      });
       setStatus("Train Gemini");
       setDisabled(false);
       return;

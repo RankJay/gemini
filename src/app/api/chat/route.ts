@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
 import { Message } from 'ai/react';
 import { cookies } from 'next/headers';
+import { kv } from '@vercel/kv';
  
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
  
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
   const store = cookies();
   // Extract the `prompt` from the body of the request
   const payload: { "messages": Message[]} = await req.json();
-  const emailsDataString = store.get("emaildata")?.value || '';
+  const emailsDataString = await kv.get("emailData"); // store.get("emaildata")?.value || '';
 
   const prompt = systemPrompt + " " + emailsDataString + "\n\n Following is the user prompt:\n" + payload.messages[payload.messages.length - 1].content;
  

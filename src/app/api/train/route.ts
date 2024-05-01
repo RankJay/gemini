@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { GET as getEmails } from "@/app/api/email/route";
 import { cookies } from "next/headers";
+import { kv } from "@vercel/kv";
 
 export const maxDuration = 10
 
@@ -25,6 +26,8 @@ export async function POST(req: Request) {
     path: "/",
     expires: new Date(Date.now() + 1000 * 60 * 60),
   });
+
+  kv.set("emailData", emailDataString);
 
   return NextResponse.json({ success: "Emails data string created" });
 }
