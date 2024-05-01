@@ -47,16 +47,16 @@ export async function GET(request: Request) {
     let snippet = "";
 
     // console.log(JSON.stringify(messageDetails))
-    if (messageDetails.payload.parts) {
-      for (const part of messageDetails.payload.parts) {
-        if (part.mimeType === "text/plain") {
-          snippet = Buffer.from(part.body.data, "base64").toString("utf-8");
-          break;
-        }
-      }
-    } else {
+    // if (messageDetails.payload.parts) {
+    //   for (const part of messageDetails.payload.parts) {
+    //     if (part.mimeType === "text/plain") {
+    //       snippet = Buffer.from(part.body.data, "base64").toString("utf-8");
+    //       break;
+    //     }
+    //   }
+    // } else {
       snippet = messageDetails.snippet;
-    }
+    // }
 
     trainingData.push(snippet)
   }
