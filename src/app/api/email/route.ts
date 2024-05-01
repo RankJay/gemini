@@ -1,11 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-// interface TrainingData {
-//   input: string; // Original email snippet
-//   output: string; // Summarized text from OpenAI
-// }
-
 export async function GET(request: Request) {
   const store = cookies();
   const code = store.get("auth");
@@ -15,8 +10,6 @@ export async function GET(request: Request) {
   }
 
   const MAX_RESULTS = process.env.MAX_RESULTS || "15";
-  // const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-  // const OPENAI_CHAT_API_URL = "https://api.openai.com/v1/chat/completions";
 
   // Fetch snippets
   const gmailResponse = await fetch(
@@ -66,36 +59,6 @@ export async function GET(request: Request) {
     }
 
     trainingData.push(snippet)
-
-    // Send the snippet to OpenAI for summarization
-    // const openaiResponse = await fetch(OPENAI_CHAT_API_URL, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${OPENAI_API_KEY}`,
-    //   },
-    //   body: JSON.stringify({
-    //     model: "gpt-3.5-turbo",
-    //     messages: [
-    //       {
-    //         role: "system",
-    //         content:
-    //           "You are a great EMAIL Summarizer. I am going to give you a email body content. I want you to iterate over this, and read, and carefully draft a summary of the email. Output only the summery no need to do any formatting",
-    //       },
-    //       { role: "user", content: snippet },
-    //     ],
-    //     max_tokens: 150,
-    //   }),
-    // });
-
-    // const summaryResult = await openaiResponse.json();
-    // if (summaryResult.choices && summaryResult.choices.length > 0) {
-    //   const summary = summaryResult.choices[0].message?.content;
-    //   trainingData.push({
-    //     input: summary, // Original email snippet
-    //     output: snippet, // Summarized text
-    //   });
-    // }
   }
 
   return new NextResponse(JSON.stringify(trainingData), {
@@ -146,7 +109,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ data: await response.json() });
   } catch (error: any) {
-    console.log(error.response.data);
     return new Response(error as any, { status: 500 });
   }
 }

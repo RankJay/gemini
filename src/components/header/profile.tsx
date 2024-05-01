@@ -43,8 +43,12 @@ export default function Profile() {
     const response = await fetch('/api/auth', {
       method: 'POST',
     });
+    if (!response.ok) {
+      return;
+    }
     const { url } = await response.json();
     router.replace(url);
+    return;
   }
 
   if (isExistingUser || profileImage.length > 0) {

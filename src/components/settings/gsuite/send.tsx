@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 import { useEmailBody } from "@/hooks/use-email-body";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -28,7 +29,7 @@ export default function SendEmailWithDialog(input: SendEmailWithDialogProps) {
   }, [input.recipientEmail, input.subject])
   const onSubmit = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const resp = await fetch("/api/email", {
+    const response = await fetch("/api/email", {
       method: "POST",
       body: JSON.stringify({
         subject: subject,
@@ -37,10 +38,16 @@ export default function SendEmailWithDialog(input: SendEmailWithDialogProps) {
       }),
     });
 
-    if (resp.ok) {
-      alert("Email sent successfully!");
+    if (!response.ok) {
+      toast({
+        title: "Error",
+        description: "Failed to send email",
+      })
     } else {
-      alert("Failed to send email!");
+      toast({
+        title: "Success",
+        description: "Email sent successfully",
+      })
     }
   };
   return (
